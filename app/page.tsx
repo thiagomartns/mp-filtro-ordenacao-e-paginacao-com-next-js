@@ -13,7 +13,12 @@ import {
 import axios from "axios";
 
 type ComponentProps = {
-  searchParams?: { search?: string; status?: string; sort?: string };
+  searchParams?: {
+    search?: string;
+    status?: string;
+    sort?: string;
+    page?: number;
+  };
 };
 
 export default async function Component({ searchParams }: ComponentProps) {
@@ -24,11 +29,14 @@ export default async function Component({ searchParams }: ComponentProps) {
         search: searchParams?.search,
         status: searchParams?.status,
         sort: searchParams?.sort,
+        page: searchParams?.page,
       },
     }
   );
 
   const orders = response.data.data;
+
+  const links = response.data.meta.links;
 
   return (
     <main className="container px-1 py-10 md:p-10">
@@ -46,7 +54,7 @@ export default async function Component({ searchParams }: ComponentProps) {
         <CardContent>
           <OrdersTable orders={orders} />
           <div className="mt-8">
-            <Pagination />
+            <Pagination links={links} />
           </div>
         </CardContent>
       </Card>
