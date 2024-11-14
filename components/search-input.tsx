@@ -4,6 +4,9 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import * as _ from "lodash";
+import { useCallback } from "react";
+
 export default function SearchInput() {
   const searchParams = useSearchParams();
 
@@ -25,6 +28,10 @@ export default function SearchInput() {
     replace(`${pathname}?${params.toString()} `);
   }
 
+  const debounceInput = useCallback(_.debounce(handleChange, 300), [
+    handleChange,
+  ]);
+
   return (
     <div className="relative">
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -32,7 +39,7 @@ export default function SearchInput() {
         type="search"
         placeholder="Busque por nome..."
         className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-        onChange={handleChange}
+        onChange={debounceInput}
       />
     </div>
   );
